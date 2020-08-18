@@ -1,0 +1,14 @@
+{
+    "name": "romain597/online-advisor",
+    "description": "Online Advisor Custom",
+    "authors": [
+        {
+            "name": "Romain Balestreri",
+            "email": "romain.balestreri@orange.fr"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    }
+}

@@ -13,51 +13,91 @@ class LoginControllerTest extends TestCase
 
     public function testConstructorInterfaceWithMysqlGateway()
     {
-        $mockGateway = $this->createMock( \App\MySqlGateway::class );
-        $this->assertInstanceOf( \App\iGateway::class , $mockGateway );
-        $this->assertIsObject( new \App\LoginController( $mockGateway ) );
-    }
-
-    /**
-     * @dataProvider badUserLoginDataProvider
-     */
-    public function testCheckIfUserExistWithBadTypo( $password, $identifier )
-    {
         $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
-        $loginController = new \App\LoginController( $gateway );
-        $this->assertFalse( $loginController->checkIfExist( $password , $identifier ) );
+        $this->assertInstanceOf( \App\iGateway::class , $gateway );
+        $this->assertIsObject( new \App\LoginController( $gateway ) );
         //$this->expectException(InvalidArgumentException::class);
     }
 
     /**
-     * @dataProvider goodUserLoginDataProvider
+     * @dataProvider badEmailIdentifierDataProvider
      */
-    public function testCheckIfUserExistWithGoodTypo( $password, $identifier )
+    public function testCheckIdentifierEmailWithBadTypo( $identifier )
     {
         $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
         $loginController = new \App\LoginController( $gateway );
-        $this->assertTrue( $loginController->checkIfExist( $password , $identifier ) );
+        $this->assertFalse( $loginController->checkIdentifierEmail( $identifier ) );
     }
 
-    public function badUserLoginDataProvider()
+    /**
+     * @dataProvider goodEmailIdentifierDataProvider
+     */
+    public function testCheckIdentifierEmailWithGoodTypo( $identifier )
+    {
+        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
+        $loginController = new \App\LoginController( $gateway );
+        $this->assertTrue( $loginController->checkIdentifierEmail( $identifier ) );
+    }
+
+    /**
+     * @dataProvider badParametersLoginDataProvider
+     */
+    public function testCheckIfParametersExistWithBadTypo( $identifier , $password )
+    {
+        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
+        $loginController = new \App\LoginController( $gateway );
+        $this->assertFalse( $loginController->checkIfExist( $identifier , $password ) );
+    }
+
+    /**
+     * @dataProvider goodParametersLoginDataProvider
+     */
+    public function testCheckIfParametersExistWithGoodTypo( $identifier , $password )
+    {
+        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
+        $loginController = new \App\LoginController( $gateway );
+        $this->assertTrue( $loginController->checkIfExist( $identifier , $password ) );
+    }
+    
+    public function badEmailIdentifierDataProvider()
     {
         return [
-            [ '' , 'user@user.com' ],
-            [ 'pass' , 'user' ],
-            [ '' , 'user' ],
-            [ 'admin' , 'User@user.superlong' ],
-            [ '123' , 'user,@user.fr' ],
-            [ '123abc' , 'user,@user.f' ]
+            [ 'user' ],
+            [ 'User@user.superlong' ],
+            [ 'user,@user.fr' ],
+            [ 'user,@user.f' ]
         ];
     }
 
-    public function goodUserLoginDataProvider()
+    public function goodEmailIdentifierDataProvider()
     {
         return [
-            [ 'hello' , 'user@user.com' ],
-            [ 'hello123' , 'user-55@user.defaut' ],
-            [ 'he@llo123?' , '655_user@user.fr' ],
-            [ '#hello123<' , 'user.user@user.eu' ]
+            [ 'user@user.com' ],
+            [ 'user-55@user.defaut' ],
+            [ '655_user@user.fr' ],
+            [ 'user.user@user.eu' ]
+        ];
+    }
+
+    public function badParametersLoginDataProvider()
+    {
+        return [
+            [ 'user@user.com' , '' ],
+            [ 'user' , 'pass' ],
+            [ 'user' , '' ],
+            [ 'User@user.superlong' , 'admin' ],
+            [ 'user,@user.fr' , '123' ],
+            [ 'user,@user.f' , '123abc' ]
+        ];
+    }
+
+    public function goodParametersLoginDataProvider()
+    {
+        return [
+            [ 'user@user.com' , 'hello' ],
+            [ 'user-55@user.defaut' , 'hello123' ],
+            [ '655_user@user.fr' , 'he@llo123?' ],
+            [ 'user.user@user.eu' , '#hello123<' ]
         ];
     }
 

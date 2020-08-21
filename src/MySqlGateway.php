@@ -8,7 +8,7 @@ class MySqlGateway implements iGateway
     private $user;
     private $database;
 
-    public function __constructor(array $parameters)
+    public function __constructor($host, $password, $user, $database)
     {
         
     }

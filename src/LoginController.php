@@ -10,33 +10,27 @@ class LoginController extends AbstractLoginController
         $this->gateway = $currentGateway;
     }
     
-    public function checkIfExist($password, $identifier)
+    public function checkIdentifierEmail($identifier)
     {
-        $validParameter = parent::checkIfExist($password, $identifier);
-        //$validParameter = true;
-        if( empty( $validParameter ) )
+        $validEmail = parent::checkIdentifier($identifier);
+        if( $validEmail === true )
         {
-            $validParameter = false;
-        }
-        if( $validParameter === true )
-        {
-            if( preg_match( "/^[[:alnum:]]([\-\_\.]?[[:alnum:]])+\_?\@[[:alnum:]]([\-\.]?[[:alnum:]])+\.[a-zA-Z]{2,6}$/i" , $identifier ) !== 1 ) // "/^([\w\-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,6})/i"
-            {
-                $validParameter = false;
-                //throw new \InvalidArgumentException('checkIfExist identifier parameter only accepts email adress. Input was: '.$identifier);
+            if( preg_match( '/^[[:alnum:]]([\-\_\.]?[[:alnum:]])+\_?\@[[:alnum:]]([\-\.]?[[:alnum:]])+\.[a-zA-Z]{2,6}$/i' , $identifier ) !== 1 )
+            { // "/^([\w\-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,6})/i" OU "/^[[:alnum:]]([\-\_\.]?[[:alnum:]])+\_?\@[[:alnum:]]([\-\.]?[[:alnum:]])+\.[a-zA-Z]{2,6}$/i"
+                $validEmail = false;
             }
         }
-        return $validParameter;
+        return $validEmail;
     }
 
-    public function loginToAccount($password, $identifier)
+    public function checkIfExist($identifier, $password)
     {
-        $loginAccountData = [];
-        if(checkIfExists($password, $identifier))
+        $parametersExists = false;
+        if( $this->checkIdentifierEmail($identifier) === true && parent::checkIfExist($identifier, $password) === true )
         {
-            
+            $parametersExists = true;
         }
-        return $loginAccountData;
+        return $parametersExists;
     }
 
 }

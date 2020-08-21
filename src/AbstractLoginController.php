@@ -4,36 +4,33 @@ namespace App;
 abstract class AbstractLoginController implements iLogin
 {
 
-    public function checkIfExist($password, $identifier)
+    public function checkPassword($password)
     {
-        $validParameter = true;
         if( empty($password) || !is_string($password) )
         {
-            $validParameter = false;
-            //throw new \InvalidArgumentException('checkIfExist password parameter only accept not empty string. Input was: '.$password);
+            return false;
         }
-        if( empty($identifier) || !is_string($identifier) )
+        else
         {
-            $validParameter = false;
-            //throw new \InvalidArgumentException('checkIfExist identifier parameter only accept not empty string. Input was: '.$identifier);
+            return true;
         }
-        return $validParameter; //true //bool
     }
 
-    public function loginToAccount($password, $identifier)
+    public function checkIdentifier($identifier)
     {
-        //$validParameter = true;
-        if( empty($password) || !is_string($password) )
-        {
-            //throw new \InvalidArgumentException('loginToAccount password parameter only accept not empty string. Input was: '.$password);
-        }
         if( empty($identifier) || !is_string($identifier) )
         {
-            //throw new \InvalidArgumentException('loginToAccount identifier parameter only accept not empty string. Input was: '.$identifier);
+            return false;
         }
-        return [];
+        else
+        {
+            return true;
+        }
     }
-
-    //public function checkIfEmpty
+    
+    public function checkIfExist($identifier, $password)
+    {
+        return ( $this->checkIdentifier($identifier) === true && $this->checkPassword($password) === true ) ? true : false ;
+    }
 
 }

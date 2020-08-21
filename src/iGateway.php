@@ -3,7 +3,7 @@ namespace App;
 
 interface iGateway 
 {
-    public function databaseLogin();
+    public function databaseLogin(); //array $parameters
     public function databaseQuery($query);
     public function databaseRequest($request);
 }

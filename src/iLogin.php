@@ -3,6 +3,7 @@ namespace App;
 
 interface iLogin
 {
-    public function checkIfExist($password, $identifier);
-    public function loginToAccount($password, $identifier);
+    public function checkPassword($password);
+    public function checkIdentifier($identifier);
+    public function checkIfExist($identifier, $password);
 }

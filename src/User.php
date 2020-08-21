@@ -3,13 +3,25 @@ namespace App;
 
 class User extends AbstractAccount
 {
-    private $gateway;
-    private $userName;
+    protected $currentGateway;
+    protected $userName;
+    protected $scoringRegister;
 
-    public function __constructor(iGateway $currentGateway, array $databaseAccountData)
+    public function __constructor(iGateway $currentGateway) //, array $databaseAccountData
     {
-        $this->gateway = $currentGateway;
-        $this->userName = $databaseAccountData["username"];
+        $this->currentGateway = $currentGateway;
+        $this->userName = "";
+        $this->scoringRegister = [];
+        //$this->userName = $databaseAccountData["username"];
+    }
+
+    public function fillObjectData($identifier)
+    {
+        if( trim($this->userName) != "" )
+        {
+            
+        }
+        return $this;
     }
 
 }

@@ -4,17 +4,17 @@ use PHPUnit\Framework\TestCase;
 
 class LoginControllerTest extends TestCase
 {
-    protected $mySqlGatewayLoginData;
 
-    protected function setUp(): void
+    public function testInstanceOfInterfaceWithMysqlGateway()
     {
-        $this->mySqlGatewayLoginData = [];
+        $gateway = new \App\MySqlGateway();
+        $this->assertInstanceOf( \App\iGateway::class , $gateway );
+        //$this->expectException(InvalidArgumentException::class);
     }
 
-    public function testConstructorInterfaceWithMysqlGateway()
+    public function testConstructorResultIsObjectWithMysqlGateway()
     {
-        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
-        $this->assertInstanceOf( \App\iGateway::class , $gateway );
+        $gateway = new \App\MySqlGateway();
         $this->assertIsObject( new \App\LoginController( $gateway ) );
         //$this->expectException(InvalidArgumentException::class);
     }
@@ -22,9 +22,9 @@ class LoginControllerTest extends TestCase
     /**
      * @dataProvider badEmailIdentifierDataProvider
      */
-    public function testCheckIdentifierEmailWithBadTypo( $identifier )
+    public function testCheckIdentifierEmailFalseWithBadTypo( $identifier )
     {
-        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
+        $gateway = new \App\MySqlGateway();
         $loginController = new \App\LoginController( $gateway );
         $this->assertFalse( $loginController->checkIdentifierEmail( $identifier ) );
     }
@@ -32,9 +32,9 @@ class LoginControllerTest extends TestCase
     /**
      * @dataProvider goodEmailIdentifierDataProvider
      */
-    public function testCheckIdentifierEmailWithGoodTypo( $identifier )
+    public function testCheckIdentifierEmailTrueWithGoodTypo( $identifier )
     {
-        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
+        $gateway = new \App\MySqlGateway();
         $loginController = new \App\LoginController( $gateway );
         $this->assertTrue( $loginController->checkIdentifierEmail( $identifier ) );
     }
@@ -42,9 +42,9 @@ class LoginControllerTest extends TestCase
     /**
      * @dataProvider badParametersLoginDataProvider
      */
-    public function testCheckIfParametersExistWithBadTypo( $identifier , $password )
+    public function testCheckIfParametersExistFalseWithBadTypo( $identifier , $password )
     {
-        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
+        $gateway = new \App\MySqlGateway();
         $loginController = new \App\LoginController( $gateway );
         $this->assertFalse( $loginController->checkIfExist( $identifier , $password ) );
     }
@@ -52,9 +52,9 @@ class LoginControllerTest extends TestCase
     /**
      * @dataProvider goodParametersLoginDataProvider
      */
-    public function testCheckIfParametersExistWithGoodTypo( $identifier , $password )
+    public function testCheckIfParametersExistTrueWithGoodTypo( $identifier , $password )
     {
-        $gateway = new \App\MySqlGateway( $this->mySqlGatewayLoginData );
+        $gateway = new \App\MySqlGateway();
         $loginController = new \App\LoginController( $gateway );
         $this->assertTrue( $loginController->checkIfExist( $identifier , $password ) );
     }

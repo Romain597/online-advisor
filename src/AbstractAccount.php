@@ -3,10 +3,17 @@ namespace App;
 
 abstract class AbstractAccount implements iAccount
 {
-    public function fillObjectData($identifier)
+    public function initObjectData($identifier)
     {
         $checkValue = true;
-        //if()
+        if( is_int( $identifier ) )
+        {
+            $checkValue = true;
+        }
+        else
+        {
+            $checkValue = false;
+        }
         return $checkValue;
     }
 }

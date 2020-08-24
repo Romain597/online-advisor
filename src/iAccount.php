@@ -3,5 +3,7 @@ namespace App;
 
 interface iAccount 
 {
-    public function fillObjectData($identifier);
+    public function initObjectData($identifier);
+    public function addScoringObjectToAccount(iScoring $scoring);
+    public function deleteScoringObjectAtAccount($scoringIdentifier);
 }

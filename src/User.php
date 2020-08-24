@@ -4,8 +4,8 @@ namespace App;
 class User extends AbstractAccount
 {
     protected $currentGateway;
-    protected $userName;
-    protected $scoringRegister;
+    protected $userName = "";
+    protected $scoringRegister = [];
 
     public function __constructor(iGateway $currentGateway) //, array $databaseAccountData
     {
@@ -15,13 +15,14 @@ class User extends AbstractAccount
         //$this->userName = $databaseAccountData["username"];
     }
 
-    public function fillObjectData($identifier)
+    public function initObjectData($identifier)
     {
-        if( trim($this->userName) != "" )
+        $testIdentifier = parent::initObjectData($identifier);
+        if( $testIdentifier )
         {
             
         }
-        return $this;
+        return $testIdentifier;
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-class Service extends AbstractScoring
+class Service extends Scoring
 {
     
 }

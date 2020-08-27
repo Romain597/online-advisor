@@ -3,75 +3,75 @@ namespace App;
 
 class MySqlGateway implements iGateway
 {
-    protected $host;
-    protected $password;
-    protected $user;
-    protected $database;
-    protected $databaseData;
+    protected $pdoGateway;
 
-    public function __construct()
+    /**
+     * @param string $hostValue
+     * @param string $passwordValue
+     * @param string $userValue
+     * @param string $databaseValue
+     * 
+     * @throws \Exception
+     */
+    public function __construct( string $hostValue, string $passwordValue, string $userValue, string $databaseValue )
     {
-        $this->host = '';
-        $this->password = '';
-        $this->user = '';
-        $this->database = '';
-        $this->databaseData = false;
-    }
-
-    public function setDatabaseData( $hostValue, $passwordValue, $userValue, $databaseValue )
-    {
-        $setData = false;
-        if( is_string( $hostValue ) && is_string( $passwordValue ) && is_string( $userValue ) && is_string( $databaseValue ) )
+        if( trim( $hostValue ) == "" || trim( $userValue ) == "" || trim( $databaseValue ) == "" )
         {
-            if( trim( $hostValue ) != "" && trim( $userValue ) != "" && trim( $databaseValue ) != "" )
-            {
-                $this->host = $hostValue;
-                $this->password = $passwordValue;
-                $this->user = $userValue;
-                $this->database = $databaseValue;
-                $this->databaseData = true;
-                $setData = true;
-            }
+            throw new \Exception("The gateway login parameters must not be empty.");
         }
-        return $setData;
-    }
-
-    public function gatewayDataNotEmpty()
-    {
-        return $this->databaseData;
-    }
-
-    public function databaseLogin()
-    {
-        $databaseLogin = false;
-        if( $this->databaseData )
+        try
         {
-            $databaseLogin = object;
+            $this->pdoGateway = new \PDO( 'mysql:dbname='.$databaseValue.';host='.$hostValue, $userValue, $passwordValue );
         }
-        return $databaseLogin;
+        catch (PDOException $e)
+        {
+            echo 'Connexion échouée : ' . $e->getMessage();
+        }
     }
 
-    public function databaseQuery( $query )
+    /**
+     * @return bool
+     */
+    public function isConnectedToDatabase() : bool
     {
-        $queryResult = [];
-        if( trim($query) != "" )
+        return ( $this->pdoGateway !== null && $this->pdoGateway instanceof \PDO ) ? true : false ;
+    }
+
+    /**
+     * @param string $query
+     * 
+     * @return array
+     */
+    public function databaseQuery( string $query ) : array
+    {
+        $queryResult;
+        if( trim($query) !== "" )
         {
-            if( $this->databaseData )
+            if( $this->isConnectedToDatabase() === true )
             {
+                //$queryStatement = $this->pdoGateway->query( $query );
+                //$queryResult = $queryStatement->fetchAll(PDO::FETCH_ASSOC);
                 $queryResult = [["user"=>"admin"]];
             }
         }
         return $queryResult;
     }
 
-    public function databaseRequest( $request )
+    /**
+     * @param string $request
+     * 
+     * @return int
+     */
+    public function databaseRequest( string $request ) : int
     {
-        $requestResult = [];
-        if( trim($request) != "" )
+        $requestResult;
+        if( trim($request) !== "" )
         {
-            if( $this->databaseData )
+            if( $this->isConnectedToDatabase() === true )
             {
-                $requestResult = [["id"=>1]];
+                //$requestStatement = $this->pdoGateway->query( $query );
+                //$requestResult = $requestStatement->rowCount();
+                $requestResult = 1;
             }
         }
         return $requestResult;

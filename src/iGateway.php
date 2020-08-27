@@ -3,8 +3,7 @@ namespace App;
 
 interface iGateway 
 {
-    public function gatewayDataNotEmpty();
-    public function databaseLogin(); //array $parameters
-    public function databaseQuery($query);
-    public function databaseRequest($request);
+    public function isConnectedToDatabase() : bool;
+    public function databaseQuery( string $query ) : array;
+    public function databaseRequest( string $request ) : int;
 }

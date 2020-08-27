@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-class ArtWork extends AbstractScoring
+class ArtWork extends Scoring
 {
     
 }

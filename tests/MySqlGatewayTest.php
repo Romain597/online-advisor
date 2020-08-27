@@ -5,62 +5,45 @@ use PHPUnit\Framework\TestCase;
 class MySqlGatewayTest extends TestCase
 {
 
-    public function testConstructorResultIsObject()
+    private function initGateway()
     {
-        $mySqlGateway = new \App\MySqlGateway();
+        return new \App\MySqlGateway( 'localhost' , '' , 'root' , 'online_advisor_custom' );
+    }
+    
+    public function testConstructorResultIsObject() : void
+    {
+        $mySqlGateway = $this->initGateway();
         $this->assertIsObject( $mySqlGateway );
     }
 
-    public function testInstanceOfInterfaceGateway()
+    public function testConstructorWithoutParameters() : void
     {
+        $this->expectException(Error::class);
         $mySqlGateway = new \App\MySqlGateway();
+    }
+
+    public function testInstanceOfInterfaceGateway() : void
+    {
+        $mySqlGateway = $this->initGateway();
         $this->assertInstanceOf( \App\iGateway::class , $mySqlGateway );
     }
 
-    public function testSetDatabaseData()
+    public function testIsConnectedToDatabaseTrue() : void
     {
-        $mySqlGateway = new \App\MySqlGateway();
-        $this->assertTrue( $mySqlGateway->setDatabaseData( 'host' , 'password' , 'user' , 'database' ) );
+        $mySqlGateway = $this->initGateway();
+        $this->assertTrue( $mySqlGateway->isConnectedToDatabase() );
     }
 
-    public function testGatewayDataNotEmptyTrue()
+    public function testDatabaseQueryNotEmpty() : void
     {
-        $mySqlGateway = new \App\MySqlGateway();
-        $mySqlGateway->setDatabaseData( 'host' , 'password' , 'user' , 'database' );
-        $this->assertTrue( $mySqlGateway->gatewayDataNotEmpty() );
-    }
-
-    public function testGatewayDataNotEmptyFalse()
-    {
-        $mySqlGateway = new \App\MySqlGateway();
-        $this->assertFalse( $mySqlGateway->gatewayDataNotEmpty() );
-    }
-    
-    public function testDatabaseLoginFalse()
-    {
-        $mySqlGateway = new \App\MySqlGateway();
-        $this->assertFalse( $mySqlGateway->databaseLogin() );
-    }
-
-    public function testDatabaseLoginObject()
-    {
-        $mySqlGateway = new \App\MySqlGateway();
-        $mySqlGateway->setDatabaseData( 'host' , 'password' , 'user' , 'database' );
-        $this->assertIsObject( $mySqlGateway->databaseLogin() );
-    }
-
-    public function testDatabaseQueryNotEmpty()
-    {
-        $mySqlGateway = new \App\MySqlGateway();
-        $mySqlGateway->setDatabaseData( 'host' , 'password' , 'user' , 'database' );
+        $mySqlGateway = $this->initGateway();
         $this->assertNotEmpty( $mySqlGateway->databaseQuery( "query" ) );
     }
 
-    public function testDatabaseRequestNotEmpty()
+    public function testDatabaseRequestNotEmpty() : void
     {
-        $mySqlGateway = new \App\MySqlGateway();
-        $mySqlGateway->setDatabaseData( 'host' , 'password' , 'user' , 'database' );
-        $this->assertNotEmpty( $mySqlGateway->databaseRequest( "request" ) );
+        $mySqlGateway = $this->initGateway();
+        $this->assertIsInt( $mySqlGateway->databaseRequest( "request" ) );
     }
 
 }

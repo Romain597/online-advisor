@@ -3,17 +3,47 @@ namespace App;
 
 abstract class AbstractAccount implements iAccount
 {
-    public function initObjectData($identifier)
+
+    public function addScoringObjectToAccount( iScoring $scoring ) : bool
     {
-        $checkValue = true;
-        if( is_int( $identifier ) )
+        $checkObject = true;
+        if( $scoring instanceof iScoring )
         {
-            $checkValue = true;
+            $checkObject = true;
         }
         else
         {
-            $checkValue = false;
+            $checkObject = false;
         }
-        return $checkValue;
+        return $checkObject;
     }
+    
+    public function deleteScoringObjectInAccount( int $scoringIdentifier ) : bool
+    {
+        $checkIdentifier = true;
+        if( is_int( $scoringIdentifier ) === true )
+        {
+            $checkIdentifier = true;
+        }
+        else
+        {
+            $checkIdentifier = false;
+        }
+        return $checkIdentifier;
+    }
+
+    public function updateScoringObjectInAccount( int $scoringIdentifier, array $parameters ) : bool
+    {
+        $checkIdentifier = true;
+        if( is_int( $scoringIdentifier ) === true && !empty($parameters) === true )
+        {
+            $checkIdentifier = true;
+        }
+        else
+        {
+            $checkIdentifier = false;
+        }
+        return $checkIdentifier;
+    }
+
 }

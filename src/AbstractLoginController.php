@@ -4,31 +4,17 @@ namespace App;
 abstract class AbstractLoginController implements iLogin
 {
 
-    public function checkPassword($password)
+    public function checkPassword( string $password ) : bool
     {
-        if( empty($password) || !is_string($password) )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return ( empty($password) === true || !is_string($password) === true ) ? false : true ;
     }
 
-    public function checkIdentifier($identifier)
+    public function checkIdentifier( string $identifier ) : bool
     {
-        if( empty($identifier) || !is_string($identifier) )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return ( empty($identifier) === true || !is_string($identifier) === true ) ? false : true ;
     }
     
-    public function checkIfExist($identifier, $password)
+    public function checkIfExist( string $identifier, string $password) : bool
     {
         return ( $this->checkIdentifier($identifier) === true && $this->checkPassword($password) === true ) ? true : false ;
     }

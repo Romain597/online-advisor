@@ -12,7 +12,7 @@ namespace App;
 class Gateway
 {
     protected $pdoGateway;
-
+// mettre pdo en param dans construct
     /**
      * Create a new gateway between the PDO object which is linked to the database and the other class
      * 
@@ -35,7 +35,7 @@ class Gateway
         }
         catch (PDOException $e)
         {
-            echo 'Connexion échouée : ' . $e->getMessage();
+            throw new \Exception( 'The connection has failed : '.$e.getMessage().' For : mysql:dbname='.$databaseValue.';host='.$hostValue.';user='.$userValue , (int)$e.getCode() );
         }
     }
 

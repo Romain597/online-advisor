@@ -34,7 +34,7 @@ class UserTest extends TestCase
     {
         $user = $this->initUser();
         $account = $this->initAccount();
-        $user->addAccount( $account );
+        $user->attachAccount( $account );
         $userAccount = $user->getAccount();
         $this->assertInstanceOf( Account::class , $userAccount );
         $this->assertSame( $account , $userAccount );
@@ -58,31 +58,31 @@ class UserTest extends TestCase
     {
         $user = $this->initUser();
         $account = $this->initAccount();
-        $user->addAccount( $account );
+        $user->attachAccount( $account );
         $this->assertTrue( $user->hasAccount() );
     }
 
-    // Tested method : addAccount
+    // Tested method : attachAccount
     
-    public function testAddAccountWithoutParameter()
+    public function testAttachAccountWithoutParameter()
     {
         $user = $this->initUser();
         $this->expectException(TypeError::class);
-        $user->addAccount();
+        $user->attachAccount();
     }
     
-    public function testAddAccountWithBadType()
+    public function testAttachAccountWithBadType()
     {
         $user = $this->initUser();
         $this->expectException(TypeError::class);
-        $user->addAccount( [] );
+        $user->attachAccount( [] );
     }
 
-    public function testAddAccountWithGoodParameter()
+    public function testAttachAccountWithGoodParameter()
     {
         $user = $this->initUser();
         $account = $this->initAccount();
-        $user->addAccount( $account );
+        $user->attachAccount( $account );
         $this->assertSame( $account , $user->getAccount() );
     }
 

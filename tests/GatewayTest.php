@@ -1,49 +1,96 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
-class MySqlGatewayTest extends TestCase
+use App\Gateway;
+
+class GatewayTest extends TestCase
 {
 
-    private function initGateway()
+    private function initMockGateway()
     {
-        return new \App\MySqlGateway( 'localhost' , '' , 'root' , 'online_advisor_custom' );
+        return $this->createMock( Gateway::class );
+        //return new \App\MySqlGateway( 'localhost' , '' , 'root' , 'online_advisor_custom' );
     }
+
+    private function initMockPdo( $mockGateway )
+    {
+        return $this->createMock( \PDO::class );
+    }
+
+    /**
+     * Makes any properties (private/protected etc) accessible on a given object via reflection
+     *
+     * @param $mockGateway Instance in which properties are being modified
+     * @param $mockPdo Value of pdoGateway
+     */
+    private function setPdoForMockGateway( $mockGateway , $mockPdo )
+    {
+        //return $mockGateway->method('__get')->with('propname')->willReturn('fakevalue');
+        $reflection = new ReflectionClass( Gateway::class );
+        $reflection_property = $reflection->getProperty( 'pdoGateway' );
+        $reflection_property->setAccessible( true );
+        $reflection_property->setValue( $mockGateway, $mockPdo );
+    }
+
+    // Tested method : __contruct
+
+    public function testConstructorWithBadTypeParameters()
+    {
+        $this->expectException(TypeError::class);
+        new Gateway( 'localhost' , 1 , 'user' , 'db' );
+    }
+
+    public function testConstructorWithBadFormatParameters()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new Gateway( 'localhost' , '' , 'user' , '' );
+    }
+
+    public function testConstructorWithBadParameters()
+    {
+        $this->expectException(Exception::class);
+        new Gateway( 'local' , '' , 'user' , 'db' );
+    }
+
+    // Tested method : isConnectedToDatabase
+
+    public function testIsConnectedToDatabaseFalse()
+    {
+        /*$mockGateway = $this->initMockGateway();
+        //$mockGateway->pdoGateway = NULL;
+        $this->setPdoForMockGateway( $mockGateway , NULL );
+        $mockGateway->method('isConnectedToDatabase')
+                    ->willReturn( ( ( $mockGateway->pdoGateway != NULL && $mockGateway->pdoGateway instanceof \PDO ) ? true : false ) );
+        $this->assertFalse( $mockGateway->isConnectedToDatabase() );*/
+    }
+
+    public function testIsConnectedToDatabaseTrue()
+    {
+        /*$mockGateway = $this->initMockGateway();
+        //$mockGateway->pdoGateway = $this->initMockPdo($mockGateway);
+        $this->setPdoForMockGateway( $mockGateway , $this->initMockPdo( $mockGateway ) );
+        $mockGateway->method('isConnectedToDatabase')
+                    ->willReturn( ( ( $mockGateway->pdoGateway != NULL && $mockGateway->pdoGateway instanceof \PDO ) ? true : false ) );
+        $this->assertTrue( $mockGateway->isConnectedToDatabase() );*/
+    }
+
+    // Tested method : databaseQuery
+
+    public function testDatabaseQueryWithBadTypeParameter()
+    {
+        //$mockGateway = $this->initMockGateway();
+
+    }
+
+    // Tested method : databaseQueryPrepare
+
+
+
+
     
-    public function testConstructorResultIsObject() : void
-    {
-        $mySqlGateway = $this->initGateway();
-        $this->assertIsObject( $mySqlGateway );
-    }
-
-    public function testConstructorWithoutParameters() : void
-    {
-        $this->expectException(Error::class);
-        $mySqlGateway = new \App\MySqlGateway();
-    }
-
-    public function testInstanceOfInterfaceGateway() : void
-    {
-        $mySqlGateway = $this->initGateway();
-        $this->assertInstanceOf( \App\iGateway::class , $mySqlGateway );
-    }
-
-    public function testIsConnectedToDatabaseTrue() : void
-    {
-        $mySqlGateway = $this->initGateway();
-        $this->assertTrue( $mySqlGateway->isConnectedToDatabase() );
-    }
-
-    public function testDatabaseQueryNotEmpty() : void
-    {
-        $mySqlGateway = $this->initGateway();
-        $this->assertNotEmpty( $mySqlGateway->databaseQuery( "query" ) );
-    }
-
-    public function testDatabaseRequestNotEmpty() : void
-    {
-        $mySqlGateway = $this->initGateway();
-        $this->assertIsInt( $mySqlGateway->databaseRequest( "request" ) );
-    }
+    
 
 }

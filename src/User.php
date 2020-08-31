@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 // user et usermodel
+// ici mettre scoring
 
 /**
  * The class User represent a visitor
@@ -84,11 +85,11 @@ class User extends Common
     }
 
     /**
-     * Add a account to the current user
+     * Attach a account to the current user
      * 
      * @param Account $account Instance of Account object
      */
-    public function addAccount( Account $account ) : void
+    public function attachAccount( Account $account ) : void
     {
         $this->userAccount = $account;
     }

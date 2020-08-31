@@ -151,13 +151,30 @@ class Scoring
     }
 
     /**
-     * Add a cooment object to the scoring
+     * Attach a comment object to scoring
      * 
      * @param Comment $comment
      */
-    public function addComment( Comment $comment) : void
+    public function attachComment( Comment $comment ) : void
     {
         $this->comments[] = $comment;
+    }
+
+    /**
+     * Detach a comment object to scoring
+     * 
+     * @param Comment $comment
+     */
+    public function detachComment( Comment $comment ) : void
+    {
+        if( !empty( $this->comments ) )
+        {
+            $this->comments = array_values( array_filter( $this->comments ,
+                function( $commentInArray )
+                {
+                    return ( $commentInArray === $comment ) ? false : true ;
+                } ) );
+        }
     }
 
 }

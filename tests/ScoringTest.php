@@ -96,7 +96,7 @@ class ScoringTest extends TestCase
     {
         $scoring = $this->initScoring();
         $comment = $this->initComment();
-        $scoring->addComment( $comment );
+        $scoring->attachComment( $comment );
         $scoringComments = $scoring->getComments();
         $this->assertIsArray( $scoringComments );
         $this->assertNotEmpty( $scoringComments );
@@ -131,29 +131,55 @@ class ScoringTest extends TestCase
         $this->assertIsArray( $scoring->getCommentsByPagination(1) );
     }
 
-    // Tested method : addComment
+    // Tested method : attachComment
 
-    public function testAddCommentToScoringWithoutParameter()
+    public function testAttachCommentToScoringWithoutParameter()
     {
         $scoring = $this->initScoring();
         $this->expectException(TypeError::class);
-        $scoring->addComment();
+        $scoring->attachComment();
     }
     
-    public function testAddCommentToScoringWithBadTypeParameter()
+    public function testAttachCommentToScoringWithBadTypeParameter()
     {
         $scoring = $this->initScoring();
         $this->expectException(TypeError::class);
-        $scoring->addComment('truc');
+        $scoring->attachComment('truc');
     }
 
-    public function testAddCommentToScoringWithGoodParameter()
+    public function testAttachCommentToScoringWithGoodParameter()
     {
         $scoring = $this->initScoring();
         $comment = $this->initComment();
-        $scoring->addComment( $comment );
+        $scoring->attachComment( $comment );
         $commentsArray = $scoring->getComments();
         $this->assertSame( $comment , $commentsArray[0] );
+    }
+
+    // Tested method : detachComment
+
+    public function testDetachCommentToScoringWithoutParameter()
+    {
+        $scoring = $this->initScoring();
+        $this->expectException(TypeError::class);
+        $scoring->detachComment();
+    }
+    
+    public function testDetachCommentToScoringWithBadTypeParameter()
+    {
+        $scoring = $this->initScoring();
+        $this->expectException(TypeError::class);
+        $scoring->detachComment('truc');
+    }
+
+    public function testDetachCommentToScoringWithGoodParameter()
+    {
+        $scoring = $this->initScoring();
+        $comment = $this->initComment();
+        $scoring->attachComment( $comment );
+        $scoring->detachComment( $comment );
+        $commentsArray = $scoring->getComments();
+        $this->assertSame( 0 , count( $commentsArray ) );
     }
 
 }

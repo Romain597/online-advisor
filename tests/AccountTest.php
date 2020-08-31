@@ -7,14 +7,14 @@ use PHPUnit\Framework\TestCase;
 use App\Account;
 use App\Scoring;
 
-class UserTest extends TestCase
+class AccountTest extends TestCase
 {
     // Intern method
 
     private function initAccount()
     {
         $date = new DateTime();
-        return new Account( 'name' , 'token' , 1 , $date , $date );
+        return new Account( 'type' , 'name' , 'token' , 1 , $date , $date );
     }
 
     private function initScoring()
@@ -36,14 +36,14 @@ class UserTest extends TestCase
     public function testConstructorWithBadParameters()
     {
         $this->expectException(TypeError::class);
-        new Account( 'name' , 'token' , '1' , '' , '' );
+        new Account( 'type' , 'name' , 'token' , '1' , '' , '' );
     }
 
     public function testConstructorWithNotAllowedParameter()
     {
         $this->expectException(InvalidArgumentException::class);
         $date = new DateTime();
-        new Account( '' , 'token' , -1 , $date , $date );
+        new Account( 'type', '' , 'token' , -1 , $date , $date );
     }
     
     public function testConstructorWithGoodParameters()
@@ -66,36 +66,62 @@ class UserTest extends TestCase
     {
         $account = $this->initAccount();
         $scoring = $this->initScoring();
-        $account->addScoring( $scoring );
+        $account->attachScoring( $scoring );
         $scoringsResult = $account->getScorings();
         $this->assertIsArray( $scoringsResult );
         $this->assertNotEmpty( $scoringsResult );
         $this->assertSame( $scoring , $scoringsResult[0] );
     }
 
-    // Tested method : addScoring
+    // Tested method : attachScoring
 
-    public function testAddScoringToAccountWithoutParameter()
+    public function testAttachScoringToAccountWithoutParameter()
     {
         $account = $this->initAccount();
         $this->expectException(TypeError::class);
-        $account->addScoring();
+        $account->attachScoring();
     }
     
-    public function testAddScoringToAccountWithBadTypeParameter()
+    public function testAttachScoringToAccountWithBadTypeParameter()
     {
         $account = $this->initAccount();
         $this->expectException(TypeError::class);
-        $account->addScoring('truc');
+        $account->attachScoring('truc');
     }
 
-    public function testAddScoringToAccountWithGoodParameter()
+    public function testAttachScoringToAccountWithGoodParameter()
     {
         $account = $this->initAccount();
         $scoring = $this->initScoring();
-        $account->addScoring( $scoring );
+        $account->attachScoring( $scoring );
         $scoringsArray = $account->getScorings();
         $this->assertSame( $scoring , $scoringsArray[0] );
     }
+
+   // Tested method : detachScoring
+
+   public function testDetachScoringToAccountWithoutParameter()
+   {
+       $account = $this->initAccount();
+       $this->expectException(TypeError::class);
+       $account->detachScoring();
+   }
+   
+   public function testDetachScoringToAccountWithBadTypeParameter()
+   {
+       $account = $this->initAccount();
+       $this->expectException(TypeError::class);
+       $account->detachScoring('truc');
+   }
+
+   public function testDetachScoringToAccountWithGoodParameter()
+   {
+       $account = $this->initAccount();
+       $scoring = $this->initScoring();
+       $account->attachScoring( $scoring );
+       $account->detachScoring( $scoring );
+       $scoringsArray = $account->getScorings();
+       $this->assertSame( 0, count( $scoringsArray ) );
+   }
 
 }

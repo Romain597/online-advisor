@@ -13,7 +13,7 @@ class CommentTest extends TestCase
    private function initComment()
    {
        $date = new DateTime();
-       return new Comment( 1 , 'comment text' , 'pseudo author of comment' , $date , null );
+       return new Comment( 1 , 'comment text' , 'pseudo author of comment' , $date , NULL );
    }
 
    private function initScoring()
@@ -27,7 +27,7 @@ class CommentTest extends TestCase
    public function testCommentConstructorWithBadParamaters()
    {
        $this->expectException(TypeError::class);
-       new Comment( 1 , '' , 'pseudo author of comment' , null , null );
+       new Comment( 1 , '' , 'pseudo author of comment' , NULL , NULL );
    }
 
    public function testCommentConstructorWithGoodParamatersWithoutNull()

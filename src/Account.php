@@ -9,6 +9,7 @@ namespace App;
  */
 final class Account
 {
+    private $accountType;
     private $accountName;
     private $accountToken;
     private $accountIdentifier;
@@ -19,20 +20,22 @@ final class Account
     /**
      * Consruct the account found in database
      * 
-     * @param string $userNameValue Must be not empty
-     * @param string $userTokenValue Must be not empty
-     * @param int $userIdentifierValue Must be positive
+     * @param string $accountTypeNameValue Must be not empty
+     * @param string $accountNameValue Must be not empty
+     * @param string $accountTokenValue Must be not empty
+     * @param int $accountIdentifierValue Must be positive
      * @param DateTime $accountAddDateValue
      * @param DateTime $accountLastVisitValue
      * 
      * @throws InvalidArgumentException If the strings parameters are empty or the number parameter is not positive
      */
-    public function __construct( string $accountNameValue , string $accountTokenValue , int $accountIdentifierValue , \DateTime $accountAddDateValue , \DateTime $accountLastVisitValue )
+    public function __construct( string $accountTypeNameValue , string $accountNameValue , string $accountTokenValue , int $accountIdentifierValue , \DateTime $accountAddDateValue , \DateTime $accountLastVisitValue )
     {
-        if( trim($accountNameValue) == "" || trim($accountTokenValue) == "" || $accountIdentifierValue < 0 )
+        if( trim($accountTypeNameValue) == "" || trim($accountNameValue) == "" || trim($accountTokenValue) == "" || $accountIdentifierValue < 0 )
         {
             throw new \InvalidArgumentException('The constructor must have positive number and must have not empty strings.');
         }
+        $this->accountType = $accountTypeNameValue;
         $this->accountName = $accountNameValue;
         $this->accountToken = $accountTokenValue;
         $this->accountIdentifier = $accountIdentifierValue;
@@ -52,6 +55,16 @@ final class Account
     }
 
     /**
+     * Get the account token
+     * 
+     * @return string
+     */
+    public function getAccountToken() : string
+    {
+        return $this->accountToken;
+    }
+
+    /**
      * Get the list of Scoring object edit by this account in a array
      * 
      * @return array<int,Scoring>
@@ -62,13 +75,30 @@ final class Account
     }
 
     /**
-     * Add a scoring to account
+     * Attach a scoring to account
      * 
      * @param Scoring $scoring
      */
-    public function addScoring( Scoring $scoring ) : void
+    public function attachScoring( Scoring $scoring ) : void
     {
         $this->scorings[] = $scoring;
+    }
+
+    /**
+     * Detach a scoring object to account
+     * 
+     * @param Scoring $scoring
+     */
+    public function detachScoring( Scoring $scoring ) : void
+    {
+        if( !empty( $this->scorings ) )
+        {
+            $this->scorings = array_values( array_filter( $this->scorings ,
+                function( $scoringInArray )
+                {
+                    return ( $scoringInArray === $scoring ) ? false : true ;
+                } ) );
+        }
     }
 
 }

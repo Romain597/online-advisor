@@ -1,83 +1,92 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App;
 
+/**
+ * This class represent a comment of a scoring
+ */
 class Comment
 {
     protected $textComment;
     protected $identifier;
-    //protected $accountIdentifier;
-    protected $accountPseudo;
+    protected $authorPseudo;
     protected $addDate;
     protected $upDate;
     
     /**
+     * Conctruct a new comment for a scoring
+     * 
      * @param int $identifierValue
      * @param string $textValue
      * @param string $accountPseudoValue
      * @param DateTime $addDateValue
      * @param ?DateTime $upDateValue
      * 
-     * @throws \Exception
+     * @throws InvalidArgumentException If the parameters are empty or not positive
      */
-    public function __construct( int $identifierValue , string $textValue , string $accountPseudoValue , DateTime $addDateValue , ?DateTime $upDateValue )
+    public function __construct( int $identifierValue , string $textValue , string $accountPseudoValue , \DateTime $addDateValue , ?\DateTime $upDateValue )
     {
         if( trim($textValue) == "" || trim($accountPseudoValue) == "" || $identifierValue < 0 )
         {
-            throw new \Exception('The constructor must has not empty string and must have positive numbers.');
+            throw new \InvalidArgumentException('The constructor must has not empty string and must have positive numbers.');
         }
-        $this->gateway = $currentGateway;
         $this->textComment = $textValue;
         $this->identifier = $identifierValue;
-        $this->accountPseudo = $accountPseudoValue;
-        //$this->accountIdentifier = $accountIdentifierValue;
+        $this->authorPseudo = $accountPseudoValue;
         $this->addDate = $addDateValue;
         $this->upDate = $upDateValue;
     }
 
+    /**
+     * Get the database identifier of the comment
+     * 
+     * @return int
+     */
     public function getIdentifier() : int
     {
         return $this->identifier;
     }
 
-    public function getFromAccountPseudo() : string
+    /**
+     * Get the pseudo of the author
+     * 
+     * @return string
+     */
+    public function getAuthorPseudo() : string
     {
-        return $this->accountPseudo;
+        return $this->authorPseudo;
     }
 
+    /**
+     * Get the text of the comment
+     * 
+     * @return string
+     */
     public function getText() : string
     {
         return $this->textComment;
     }
 
-    public function getAddDate( string $dateFormat ) : string
+    /**
+     * Get the current add date time
+     * 
+     * @return DateTime
+     */
+    public function getAddDate() : \DateTime
     {
-        $addDateFormated = '';
-        try
-        {
-            $addDateFormated = $this->addDate->format( $dateFormat );
-        }
-        catch (Exception $e)
-        {
-            echo 'Format date non valide.';
-        }
-        return $addDateFormated;
+        return $this->addDate;
     }
 
-    public function getUpDate( string $dateFormat ) : string
+    /**
+     * Get the current update time
+     * 
+     * @return ?DateTime or NULL
+     */
+    public function getUpDate() : ?\DateTime
     {
-        $upDateFormated = '';
-        if( $this->upDate != null )
-        {
-            try
-            {
-                $upDateFormated = $this->upDate->format( $dateFormat );
-            }
-            catch (Exception $e)
-            {
-                echo 'Format date non valide.';
-            }
-        }
-        return $upDateFormated;
+        return $this->upDate;
     }
 
 }

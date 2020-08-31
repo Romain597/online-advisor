@@ -1,67 +1,159 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
+
+use App\Account;
+use App\User;
 
 class UserTest extends TestCase
 {
-
-    private function initScoring()
-    {
-        $gateway = new \App\MySqlGateway( 'localhost' , '' , 'root' , 'online_advisor_custom' );
-        return new \App\Scoring( $gateway , 1 , 5 , 'Livre enfant' , 'Super livre enfant' , 'description livre' );
-    }
+    // Intern method
 
     private function initAccount()
     {
-        $gateway = new \App\MySqlGateway( 'localhost' , '' , 'root' , 'online_advisor_custom' );
-        return new \App\User( $gateway, 'userName', 'token', 1 );
+        $date = new DateTime();
+        return new Account( 'name' , 'token' , 1 , $date , $date );
     }
 
-    public function testConstructorResultIsObject()
+    private function initUser()
     {
-        $account = $this->initAccount();
-        $this->assertIsObject($account);
+        return new User();
     }
 
-    public function testDeleteScoringObjectInAccountError()
+    // Tested method : getAccount
+
+    public function testGetAccountWithoutParameter()
     {
-        $account = $this->initAccount();
-        $this->expectException(Error::class);
-        $account->deleteScoringObjectInAccount('');
+        $user = $this->initUser();
+        $this->assertNull( $user->getAccount() );
     }
 
-    public function testDeleteScoringObjectInAccountTrue()
+    public function testGetAccountWithGoodParameter()
     {
+        $user = $this->initUser();
         $account = $this->initAccount();
-        $this->assertTrue( $account->deleteScoringObjectInAccount(1) );
+        $user->addAccount( $account );
+        $userAccount = $user->getAccount();
+        $this->assertInstanceOf( Account::class , $userAccount );
+        $this->assertSame( $account , $userAccount );
     }
 
-    public function testAddScoringObjectToAccountError()
+    // Tested method : hasAccount
+
+    public function testHasAccountWithBadTypeParameter()
     {
-        $account = $this->initAccount();
-        $this->expectException(Error::class);
-        $account->addScoringObjectToAccount([]);
+        $user = $this->initUser();
+        $this->assertFalse( $user->hasAccount('none') );
+    }
+    
+    public function testHasAccountWithoutParameter()
+    {
+        $user = $this->initUser();
+        $this->assertFalse( $user->hasAccount() );
     }
 
-    public function testAddScoringObjectToAccountTrue()
+    public function testHasAccountWithGoodParameter()
     {
-        $scoring = $this->initScoring();
+        $user = $this->initUser();
         $account = $this->initAccount();
-        $this->assertTrue( $account->addScoringObjectToAccount( $scoring ) );
+        $user->addAccount( $account );
+        $this->assertTrue( $user->hasAccount() );
     }
 
-    public function testUpdateScoringObjectInAccountError()
+    // Tested method : addAccount
+    
+    public function testAddAccountWithoutParameter()
     {
-        $account = $this->initAccount();
-        $this->expectException(Error::class);
-        $account->updateScoringObjectInAccount('',[]);
+        $user = $this->initUser();
+        $this->expectException(TypeError::class);
+        $user->addAccount();
+    }
+    
+    public function testAddAccountWithBadType()
+    {
+        $user = $this->initUser();
+        $this->expectException(TypeError::class);
+        $user->addAccount( [] );
     }
 
-    public function testUpdateScoringObjectInAccountTrue()
+    public function testAddAccountWithGoodParameter()
     {
-        $scoring = $this->initScoring();
+        $user = $this->initUser();
         $account = $this->initAccount();
-        $this->assertTrue( $account->updateScoringObjectInAccount( 1, ["param"] ) );
+        $user->addAccount( $account );
+        $this->assertSame( $account , $user->getAccount() );
+    }
+
+    // Tested method : checkLoginParameters
+
+    public function testCheckLoginParametersWithoutParameters()
+    {
+        $user = $this->initUser();
+        $this->expectException(TypeError::class);
+        $user->checkLoginParameters();
+    }
+
+    public function testCheckLoginParametersWithBadTypeParameters()
+    {
+        $user = $this->initUser();
+        $this->expectException(TypeError::class);
+        $user->checkLoginParameters( 1 , '' );
+    }
+
+    public function testCheckLoginParametersWithNotAllowedParameters()
+    {
+        $user = $this->initUser();
+        $this->expectException(InvalidArgumentException::class);
+        $user->checkLoginParameters( '' , '' );
+    }
+
+    public function testCheckLoginParametersWithBadFormatParameters()
+    {
+        $user = $this->initUser();
+        $this->assertFalse( $user->checkLoginParameters( 'id' , 'pass' ) );
+    }
+
+    public function testCheckLoginParametersWithGoodParameters()
+    {
+        $user = $this->initUser();
+        $this->assertTrue( $user->checkLoginParameters( 'user@default.com' , 'password' ) );
+    }
+
+    // Tested method : checkCreateAccountParameters
+
+    public function testCheckCreateAccountParametersWithoutParameters()
+    {
+        $user = $this->initUser();
+        $this->expectException(TypeError::class);
+        $user->checkCreateAccountParameters();
+    }
+
+    public function testCheckCreateAccountParametersWithBadTypeParameters()
+    {
+        $user = $this->initUser();
+        $this->expectException(TypeError::class);
+        $user->checkCreateAccountParameters( 1 , '' , [] );
+    }
+
+    public function testCheckCreateAccountParametersWithNotAllowedParameters()
+    {
+        $user = $this->initUser();
+        $this->expectException(InvalidArgumentException::class);
+        $user->checkCreateAccountParameters( '' , '' , 'n' );
+    }
+
+    public function testCheckCreateAccountParametersWithBadFormatParameters()
+    {
+        $user = $this->initUser();
+        $this->assertFalse( $user->checkCreateAccountParameters( 'id' , 'pass' , 'name' ) );
+    }
+
+    public function testCheckCreateAccountParametersWithGoodParameters()
+    {
+        $user = $this->initUser();
+        $this->assertTrue( $user->checkCreateAccountParameters( 'user@default.com' , 'password' , 'name' ) );
     }
 
 }

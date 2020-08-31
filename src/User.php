@@ -1,88 +1,96 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App;
 
-class User extends AbstractAccount
+// user et usermodel
+
+/**
+ * The class User represent a visitor
+ */
+class User extends Common
 {
-    //protected $currentGateway;
-    protected $userName;
-    protected $userToken;
-    protected $userIdentifier;
-    protected $scoringRegister;
-    protected $gateway;
+    // object which represent the account of current user
+    private $userAccount;
 
     /**
-     * @param iGateway $currentGateway
-     * @param string $userNameValue
-     * @param string $userTokenValue
-     * @param int $userIdentifierValue
+     * Check the password and identifier for login to the account
      * 
-     * @throws \Exception
-     */
-    public function __construct( iGateway $currentGateway, string $userNameValue, string $userTokenValue, int $userIdentifierValue )
-    {
-        if( trim($userNameValue) == "" || trim($userTokenValue) == "" || $userIdentifierValue < 0 )
-        {
-            throw new \Exception('The constructor must have positive numbers and must not have empty strings.');
-        }
-        $this->gateway = $currentGateway;
-        $this->userName = $userNameValue;
-        $this->userToken = $userTokenValue;
-        $this->userIdentifier = $userIdentifierValue;
-        $this->scoringRegister = [];
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdentifier() : int
-    {
-        return $this->userIdentifier;
-    }
-
-    /**
-     * @param int $scoringIdentifier
+     * @param string $identifier
+     * @param string $password
+     * 
+     * @throws InvalidArgumentException If there are empty strings in parameters
      * 
      * @return bool
      */
-    public function deleteScoringObjectInAccount( int $scoringIdentifier ) : bool
+    public function checkLoginParameters( string $identifier , string $password ) : bool
     {
-        $testIdentifier = parent::deleteScoringObjectInAccount($scoringIdentifier);
-        if( $testIdentifier === true && $this->gateway->isConnectedToDatabase() === true )
+        if( trim( $password ) == "" || trim( $identifier ) == "" )
         {
-            
+            throw new \InvalidArgumentException("The string parameters must be not empty.");
         }
-        return $testIdentifier;
+        $checkLoginParameters = false;
+        if( parent::checkEmail($identifier) === true && parent::checkPassword($password) === true )
+        {
+            $checkLoginParameters = true;
+        }
+        return $checkLoginParameters;
     }
 
     /**
-     * @param int $scoringIdentifier
-     * @param array $parameters
+     * Check the create password, identifier and name for a new account
+     * 
+     * @param string $identifier Must not be empty
+     * @param string $password Must not be empty
+     * @param string $name Must not be empty
+     * 
+     * @throws InvalidArgumentException If there are empty strings in parameters
      * 
      * @return bool
      */
-    public function updateScoringObjectInAccount( int $scoringIdentifier, array $parameters) : bool
+    public function checkCreateAccountParameters( string $identifier , string $password , string $name ) : bool
     {
-        $testIdentifier = parent::updateScoringObjectInAccount($scoringIdentifier, $parameters);
-        if( $testIdentifier === true && $this->gateway->isConnectedToDatabase() === true )
+        if( trim( $password ) == "" || trim( $identifier ) == "" || trim( $name ) == "" )
         {
-            
+            throw new \InvalidArgumentException("The string parameters must be not empty.");
         }
-        return $testIdentifier;
+        $checkCreateAccountParameters = false;
+        if( parent::checkEmail($identifier) === true && parent::checkPassword($password) === true )
+        {
+            $checkCreateAccountParameters = true;
+        }
+        return $checkCreateAccountParameters;
     }
 
     /**
-     * @param iScoring $scoring
+     * Test if a account is link to the current user
      * 
      * @return bool
      */
-    public function addScoringObjectToAccount( iScoring $scoring ) : bool
+    public function hasAccount() : bool
     {
-        $testObject = parent::addScoringObjectToAccount($scoring);
-        if( $testObject === true && $this->gateway->isConnectedToDatabase() === true )
-        {
-            
-        }
-        return $testObject;
+        return ( $this->userAccount != NULL );
+    }
+
+    /**
+     * Get the account object of the current user
+     * 
+     * @return Account
+     */
+    public function getAccount() : ?Account
+    {
+        return $this->userAccount;
+    }
+
+    /**
+     * Add a account to the current user
+     * 
+     * @param Account $account Instance of Account object
+     */
+    public function addAccount( Account $account ) : void
+    {
+        $this->userAccount = $account;
     }
 
 }

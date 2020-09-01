@@ -60,10 +60,10 @@ class GatewayTest extends TestCase
     public function testIsConnectedToDatabaseFalse()
     {
         /*$mockGateway = $this->initMockGateway();
-        //$mockGateway->pdoGateway = NULL;
-        $this->setPdoForMockGateway( $mockGateway , NULL );
+        //$mockGateway->pdoGateway = null;
+        $this->setPdoForMockGateway( $mockGateway , null );
         $mockGateway->method('isConnectedToDatabase')
-                    ->willReturn( ( ( $mockGateway->pdoGateway != NULL && $mockGateway->pdoGateway instanceof \PDO ) ? true : false ) );
+                    ->willReturn( ( ( $mockGateway->pdoGateway != null && $mockGateway->pdoGateway instanceof \PDO ) ? true : false ) );
         $this->assertFalse( $mockGateway->isConnectedToDatabase() );*/
     }
 
@@ -73,7 +73,7 @@ class GatewayTest extends TestCase
         //$mockGateway->pdoGateway = $this->initMockPdo($mockGateway);
         $this->setPdoForMockGateway( $mockGateway , $this->initMockPdo( $mockGateway ) );
         $mockGateway->method('isConnectedToDatabase')
-                    ->willReturn( ( ( $mockGateway->pdoGateway != NULL && $mockGateway->pdoGateway instanceof \PDO ) ? true : false ) );
+                    ->willReturn( ( ( $mockGateway->pdoGateway != null && $mockGateway->pdoGateway instanceof \PDO ) ? true : false ) );
         $this->assertTrue( $mockGateway->isConnectedToDatabase() );*/
     }
 

@@ -15,7 +15,7 @@ class UserBddTest extends TestCase
     private function initAccount()
     {
         $date = new DateTime();
-        return new Account( 'name' , 'token' , 1 , $date , $date );
+        return new Account( 'type' , 'name' , 'token' , 1 , $date , $date );
     }
 
     private function initUser()

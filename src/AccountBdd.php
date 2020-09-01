@@ -10,13 +10,16 @@ namespace App;
 class AccountBdd
 {
     protected $gateway;
-    protected $accountData;
+    protected $user;
 
-    public function __construct( Gateway $gatewayValue )
+    public function __construct( Gateway $gatewayObject , User $userObject )
     {
-        $this->gateway = $gatewayValue;
+        $this->gateway = $gatewayObject;
+        $this->user = $userObject;
     }
 
+    //update account
+    //delete account
 
 
 }

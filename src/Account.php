@@ -15,7 +15,7 @@ final class Account
     private $accountIdentifier;
     private $accountAddDate;
     private $accountLastVisit;
-    private $scorings;
+    //private $scorings;
 
     /**
      * Consruct the account found in database
@@ -41,7 +41,7 @@ final class Account
         $this->accountIdentifier = $accountIdentifierValue;
         $this->accountAddDate = $accountAddDateValue;
         $this->accountLastVisit = $accountLastVisitValue;
-        $this->scorings = [];
+        //$this->scorings = [];
     }
 
     /**
@@ -62,43 +62,6 @@ final class Account
     public function getAccountToken() : string
     {
         return $this->accountToken;
-    }
-
-    /**
-     * Get the list of Scoring object edit by this account in a array
-     * 
-     * @return array<int,Scoring>
-     */
-    public function getScorings() : array
-    {
-        return $this->scorings;
-    }
-
-    /**
-     * Attach a scoring to account
-     * 
-     * @param Scoring $scoring
-     */
-    public function attachScoring( Scoring $scoring ) : void
-    {
-        $this->scorings[] = $scoring;
-    }
-
-    /**
-     * Detach a scoring object to account
-     * 
-     * @param Scoring $scoring
-     */
-    public function detachScoring( Scoring $scoring ) : void
-    {
-        if( !empty( $this->scorings ) )
-        {
-            $this->scorings = array_values( array_filter( $this->scorings ,
-                function( $scoringInArray )
-                {
-                    return ( $scoringInArray === $scoring ) ? false : true ;
-                } ) );
-        }
     }
 
 }

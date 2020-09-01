@@ -15,9 +15,9 @@ class Scoring
     protected $description;
     protected $identifier;
     protected $scoringTypeName;
-    protected $authorPseudo;
+    //protected $authorPseudo;
     protected $addDate;
-    protected $upDate;
+    protected $updateDate;
     protected $commentsNumberByPagination = 15;
     protected $minScore = 1;
     protected $maxScore = 5;
@@ -29,16 +29,15 @@ class Scoring
      * @param int $identifierValue
      * @param int $rankValue
      * @param string $scoringTypeNameValue
-     * @param string $authorPseudoValue
      * @param string $subjectValue
      * @param string $titleValue
      * @param string $descriptionValue
      * @param DateTime $addDateValue
-     * @param ?DateTime or NULL $upDateValue
+     * @param ?DateTime or null $upDateValue
      * 
      * @throws InvalidArgumentException If the parameters are empty or not positive
      */
-    public function __construct( int $identifierValue , int $rankValue , string $scoringTypeNameValue , string $authorPseudoValue , string $subjectValue , string $titleValue , string $descriptionValue , \DateTime $addDateValue , ?\DateTime $upDateValue )
+    public function __construct( int $identifierValue , int $rankValue , string $scoringTypeNameValue , string $subjectValue , string $titleValue , string $descriptionValue , \DateTime $addDateValue , ?\DateTime $updateDateValue )
     {
         if( trim($scoringTypeNameValue) == "" || trim($authorPseudoValue) == "" || trim($subjectValue) == "" || trim($titleValue) == "" || trim($descriptionValue) == "" || $identifierValue < 0 || $rankValue < 0 )
         {
@@ -52,15 +51,15 @@ class Scoring
         $this->title = $titleValue;
         $this->description = $descriptionValue;
         $this->identifier = $identifierValue;
-        $this->authorPseudo = $authorPseudoValue;
+        //$this->authorPseudo = $authorPseudoValue;
         $this->scoringTypeName = $scoringTypeNameValue;
         $this->addDate = $addDateValue;
-        $this->upDate = $upDateValue;
+        $this->updateDate = $updateDateValue;
         $this->comments = [];
     }
 
     /**
-     * Get the rank of the scoring
+     * Get the rank of scoring
      * 
      * @return int
      */
@@ -70,13 +69,13 @@ class Scoring
     }
 
     /**
-     * Get the pseudo of the author
+     * Get the identifier of scoring
      * 
-     * @return string
+     * @return int
      */
-    public function getAuthorPseudo() : string
+    public function getIdentifier() : int
     {
-        return $this->authorPseudo;
+        return $this->identifier;
     }
     
     /**

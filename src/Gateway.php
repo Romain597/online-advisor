@@ -46,7 +46,7 @@ class Gateway
      */
     public function isConnectedToDatabase() : bool
     {
-        return ( $this->pdoGateway != NULL && $this->pdoGateway instanceof \PDO ) ? true : false ;
+        return $this->pdoGateway instanceof \PDO;
     }
 
     /**
@@ -76,7 +76,6 @@ class Gateway
         {
             throw new \Exception( 'Query error : The query return is false. For the query : '.$query );
         }
-        //$queryResult = $queryStatement->fetchAll(PDO::FETCH_ASSOC);
         return $queryStatement;
     }
 

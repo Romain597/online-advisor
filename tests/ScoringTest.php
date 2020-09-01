@@ -14,13 +14,13 @@ class ScoringTest extends TestCase
     private function initComment()
     {
         $date = new DateTime();
-        return new Comment( 1 , 'comment text' , 'pseudo author of comment' , $date , NULL );
+        return new Comment( 1 , 'comment text' , 'pseudo author of comment' , $date , null );
     }
 
     private function initScoring()
     {
         $date = new DateTime();
-        return new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , NULL );
+        return new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , null );
     }
 
     // Tested method : __construct
@@ -28,7 +28,7 @@ class ScoringTest extends TestCase
     public function testScoringConstructorWithBadParamaters()
     {
         $this->expectException(TypeError::class);
-        new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , NULL , NULL );
+        new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , null , null );
     }
 
     public function testScoringConstructorWithGoodParamatersWithoutNull()

@@ -12,8 +12,12 @@ namespace App;
  */
 class User extends Common
 {
-    // object which represent the account of current user
+    
+    /** @var Account */
     private $userAccount;
+
+    /** @var Scoring */
+    private $userScorings = [];
 
     /**
      * Check the password and identifier for login to the account
@@ -71,7 +75,7 @@ class User extends Common
      */
     public function hasAccount() : bool
     {
-        return ( $this->userAccount != NULL );
+        return ( $this->userAccount != null );
     }
 
     /**
@@ -92,6 +96,53 @@ class User extends Common
     public function attachAccount( Account $account ) : void
     {
         $this->userAccount = $account;
+    }
+
+    /**
+     * Test if any scorings are linked to the current user
+     * 
+     * @return bool
+     */
+    public function hasScorings() : bool
+    {
+        return !empty( $this->userScorings );
+    }
+
+    /**
+     * Get the list of Scoring object edit by this user in a array
+     * 
+     * @return array<int,Scoring>
+     */
+    public function getScorings() : array
+    {
+        return $this->userScorings;
+    }
+
+    /**
+     * Attach a scoring to user
+     * 
+     * @param Scoring $scoring
+     */
+    public function attachScoring( Scoring $scoring ) : void
+    {
+        $this->userScorings[] = $scoring;
+    }
+
+    /**
+     * Detach a scoring object to user
+     * 
+     * @param Scoring $scoring
+     */
+    public function detachScoring( Scoring $scoring ) : void
+    {
+        if( !empty( $this->userScorings ) )
+        {
+            $this->userScorings = array_values( array_filter( $this->scorings ,
+                function( $scoringInArray )
+                {
+                    return ( $scoringInArray === $scoring ) ? false : true ;
+                } ) );
+        }
     }
 
 }

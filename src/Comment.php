@@ -11,22 +11,23 @@ class Comment
 {
     protected $textComment;
     protected $identifier;
-    protected $authorPseudo;
+    protected $authorAccount;
     protected $addDate;
-    protected $upDate;
+    protected $updateDate;
     
     /**
      * Conctruct a new comment for a scoring
      * 
      * @param int $identifierValue
      * @param string $textValue
+     * @param string $accountIdentifierValue
      * @param string $accountPseudoValue
      * @param DateTime $addDateValue
      * @param ?DateTime $upDateValue
      * 
      * @throws InvalidArgumentException If the parameters are empty or not positive
      */
-    public function __construct( int $identifierValue , string $textValue , string $accountPseudoValue , \DateTime $addDateValue , ?\DateTime $upDateValue )
+    public function __construct( int $identifierValue , string $textValue , Account $accountObject , \DateTime $addDateValue , ?\DateTime $updateDateValue )
     {
         if( trim($textValue) == "" || trim($accountPseudoValue) == "" || $identifierValue < 0 )
         {
@@ -34,9 +35,9 @@ class Comment
         }
         $this->textComment = $textValue;
         $this->identifier = $identifierValue;
-        $this->authorPseudo = $accountPseudoValue;
+        $this->authorAccount = $accountObject;
         $this->addDate = $addDateValue;
-        $this->upDate = $upDateValue;
+        $this->updateDate = $updateDateValue;
     }
 
     /**
@@ -50,13 +51,13 @@ class Comment
     }
 
     /**
-     * Get the pseudo of the author
+     * Get the author account of this comment
      * 
-     * @return string
+     * @return int
      */
-    public function getAuthorPseudo() : string
+    public function getAuthorAccount() : Account
     {
-        return $this->authorPseudo;
+        return $this->authorAccount;
     }
 
     /**
@@ -82,11 +83,11 @@ class Comment
     /**
      * Get the current update time
      * 
-     * @return ?DateTime or NULL
+     * @return ?DateTime or null
      */
-    public function getUpDate() : ?\DateTime
+    public function getUpdateDate() : ?\DateTime
     {
-        return $this->upDate;
+        return $this->updateDate;
     }
 
 }

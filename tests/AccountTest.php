@@ -20,7 +20,7 @@ class AccountTest extends TestCase
     private function initScoring()
     {
         $date = new DateTime();
-        return new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , NULL );
+        return new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , null );
     }
 
     // Tested method : getAccountIdentifier

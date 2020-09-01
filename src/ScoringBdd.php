@@ -29,7 +29,7 @@ class ScoringBdd
                     INNER JOIN accounts_types t ON t.id_account_type = a.accounts_type_id 
                     WHERE c.rating_comment_subject_id = '.$scoring->getIdentifier().' ;';
                 $pdoStatementForComments = $this->gateway->databaseQuery( $query );
-                $resultForComments = $pdoStatementForComments->fetchAll(PDO::FETCH_ASSOC);
+                $resultForComments = $pdoStatementForComments->fetchAll(\PDO::FETCH_ASSOC);
                 if( !empty($resultForComments) === true ) {
                     foreach($resultForComments as $commentResult) {
                         $commentAccount = null;

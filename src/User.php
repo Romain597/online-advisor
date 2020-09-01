@@ -69,6 +69,15 @@ class User extends Common
     }
 
     /**
+     * Log out the current user
+     */
+    public function logout() : void
+    {
+        $this->userAccount = null;
+        $this->userScorings = [];
+    }
+
+    /**
      * Test if a account is link to the current user
      * 
      * @return bool
@@ -143,6 +152,31 @@ class User extends Common
                     return ( $scoringInArray === $scoring ) ? false : true ;
                 } ) );
         }
+    }
+
+    /**
+     * Detach a scoring object to user
+     * 
+     * @param Scoring $scoring
+     */
+    public function getUserScoringByIdentifier( int $scoringId ) : ?Scoring
+    {
+        if( $scoringId < 0 ) {
+            throw new \Exception("Scoring identifier number must be positive.");
+        }
+        $scoringObject = null;
+        if( !empty( $this->userScorings ) )
+        {
+            $resultScoring = array_values( array_filter( $this->scorings ,
+                function( $scoringInArray )
+                {
+                    return ( $scoringInArray->getIdentifier() == $scoringId ) ;
+                } ) );
+            if( !empty( $resultScoring ) === true && count( $resultScoring ) === 1 ) {
+                $scoringObject = $resultScoring[0];
+            }
+        }
+        return $scoringObject;
     }
 
 }

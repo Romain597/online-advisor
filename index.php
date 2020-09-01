@@ -34,6 +34,8 @@ if( $currentUser->hasAccount() === true ) {
 
 //var_dump($_GLOBALS['user']);
 
+//mettre objet a place du code brute
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">

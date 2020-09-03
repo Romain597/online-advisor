@@ -1,0 +1,25 @@
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+actor_suffix: Tester
+settings:
+    colors: true
+modules:
+    config:
+        Db:
+            dsn: 'mysql:host=localhost;dbname=test_online_advisor_custom'
+            user: 'root'
+            password: ''
+            dump: 'tests/_data/dump.sql'
+            populate: true # run populator before all test
+            #cleanup: true # run populator before each test
+            #populator: 'mysql -u $user -h $host $dbname < $dump'
+        #WebDriver:
+            #browser: firefox
+            #url: http://localhost
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed

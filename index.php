@@ -17,7 +17,7 @@ if( !isset( $_GLOBALS['user'] ) || empty( $_GLOBALS['user'] ) ) {
 $currentUser = $_GLOBALS['user'];
 if( $currentUser->hasAccount() === true ) {
     if( isset( $_SESSION['token'] ) === true && !empty( $_SESSION['token'] ) === true ) {
-        require_once 'mysqlgateway_conf.php';
+        require_once 'inc/mysqlgateway_conf.php';
         $mysqlGatewayObject = new Gateway( $host , $password , $user , $database );
         $userBdd = new UserBdd( $mysqlGatewayObject , $currentUser );
         if( $userBdd->checkAccountToken( $_SESSION['token'] ) === false ) {
@@ -63,7 +63,7 @@ if( $currentUser->hasAccount() === true ) {
                     <a class="nav-link" href="login.php">Connexion</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="add_account.php">S'inscrire</a>
+                    <a class="nav-link" href="create_account.php">S'inscrire</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Déconnexion</a>
@@ -84,7 +84,7 @@ if( $currentUser->hasAccount() === true ) {
                             $currentUser = $_GLOBALS['user'];
                         }
                         if( isset( $mysqlGatewayObject ) === false ) {
-                            require_once 'mysqlgateway_conf.php';
+                            require_once 'inc/mysqlgateway_conf.php';
                             $mysqlGatewayObject = new Gateway( $host , $password , $user , $database );
                         }
                         $userBdd = new UserBdd( $mysqlGatewayObject , $currentUser );

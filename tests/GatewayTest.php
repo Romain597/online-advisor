@@ -9,15 +9,19 @@ use App\Gateway;
 class GatewayTest extends TestCase
 {
 
-    private function initMockGateway()
+    /*private function initMockGateway()
     {
-        return $this->createMock( Gateway::class );
+        return $this->getMockBuilder( Gateway::class )
+            ->disableOriginalConstructor()
+            ->getMock();
         //return new \App\MySqlGateway( 'localhost' , '' , 'root' , 'online_advisor_custom' );
-    }
+    }*/
 
     private function initMockPdo( $mockGateway )
     {
-        return $this->createMock( \PDO::class );
+        return $this->getMockBuilder( \PDO::class )
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**

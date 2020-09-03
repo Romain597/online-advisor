@@ -1,0 +1,7 @@
+/vendor
+/composer.lock
+/info
+/.phpunit.result.cache
+/src/old
+/tests/old
+.gitkeep

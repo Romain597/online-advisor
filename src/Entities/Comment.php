@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Entity;
 
 /**
  * This class represent a comment of a scoring
@@ -14,20 +14,20 @@ class Comment
     protected $authorAccount;
     protected $addDate;
     protected $updateDate;
+    protected $scoringIdentifier;
     
     /**
      * Conctruct a new comment for a scoring
      * 
      * @param int $identifierValue
      * @param string $textValue
-     * @param string $accountIdentifierValue
-     * @param string $accountPseudoValue
+     * @param Account $accountObject
      * @param DateTime $addDateValue
      * @param ?DateTime $upDateValue
      * 
      * @throws InvalidArgumentException If the parameters are empty or not positive
      */
-    public function __construct( int $identifierValue , string $textValue , Account $accountObject , \DateTime $addDateValue , ?\DateTime $updateDateValue )
+    public function __construct( int $identifierValue , string $textValue , $scoringIdentifierValue , Account $accountObject , \DateTime $addDateValue , ?\DateTime $updateDateValue )
     {
         if( trim($textValue) == "" || trim($accountPseudoValue) == "" || $identifierValue < 0 )
         {
@@ -37,6 +37,7 @@ class Comment
         $this->identifier = $identifierValue;
         $this->authorAccount = $accountObject;
         $this->addDate = $addDateValue;
+        $this->scoringIdentifier = $scoringIdentifierValue;
         $this->updateDate = $updateDateValue;
     }
 
@@ -58,6 +59,16 @@ class Comment
     public function getAuthorAccount() : Account
     {
         return $this->authorAccount;
+    }
+
+    /**
+     * Get the scoring identifier of this comment
+     * 
+     * @return int
+     */
+    public function getScoringIdentifier() : int
+    {
+        return $this->scoringIdentifier;
     }
 
     /**

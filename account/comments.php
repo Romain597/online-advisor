@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 session_start();
 
@@ -10,10 +10,9 @@ use App\Model\Gateway;
 use App\Entity\User;
 use App\Model\UserBdd;
 use App\Controller\UserController;
-//use App\Model\CommentBdd;
-use App\Model\ScoringBdd;
 use App\View\ScoringView;
-use App\View\UserView;
+use App\Model\ScoringBdd;
+use App\Entity\Scoring;
 
 $_SESSION['message'] = '';
 
@@ -25,7 +24,7 @@ if( !isset( $_SESSION['user'] ) === true || empty( $_SESSION['user'] ) === true 
 $currentUser = $_SESSION['user'];
 if( $currentUser->hasAccount() === true ) {
     if( isset( $_SESSION['token'] ) === true && !empty( $_SESSION['token'] ) === true ) {
-        require_once 'inc/mysqlgateway_conf.php';
+        require_once '../inc/mysqlgateway_conf.php';
         $mysqlGatewayObject = new Gateway( $gatewayHost , $gatewayPassword , $gatewayUser , $gatewayDatabase );
         $userBdd = new UserBdd( $mysqlGatewayObject , $currentUser );
         if( $userBdd->checkAccountToken( $_SESSION['token'] ) === false ) {
@@ -39,18 +38,6 @@ if( $currentUser->hasAccount() === true ) {
 } else if( isset( $_SESSION['token'] ) === true ) {
     unset( $_SESSION['token'] );
 }
-
-//var_dump($currentUser);
-
-//$scoringNum = intval($_GET['s']) ?? intval($_POST['s']) ?? null;
-$scoringNum = filter_input( INPUT_GET , 'n' , FILTER_SANITIZE_NUMBER_INT );
-if( empty( $scoringNum ) === true ) {
-    $scoringNum = null;
-} else {
-    $scoringNum = intval( $scoringNum );
-}
-
-//var_dump($scoringNum);
 
 ?>
 <!DOCTYPE html>
@@ -76,16 +63,20 @@ if( empty( $scoringNum ) === true ) {
             </a>
             <ul class="nav justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.php">Accueil</a>
+                    <a class="nav-link" href="../index.php">Accueil</a>
                 </li>
-                <?php
-                    if( isset( $currentUser ) === false ) {
-                        $currentUser = $_SESSION['user'];
-                    }
-                    $userView = new UserView( $currentUser );
-                    //var_dump($userView);
-                    $userView->getUserMenu();
-                ?>
+                <li class="nav-item">
+                    <a class="nav-link active" href="scorings.php">Notes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="comments.php">Commentaires</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="configuration.php">Compte</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="account/logout.php">Se déconnecter</a>
+                </li>
             </ul>
         </nav>
     </header>
@@ -93,44 +84,41 @@ if( empty( $scoringNum ) === true ) {
     <main class="container-lg pt-5">
         <section class="row align-items-center justify-content-center">
             <div class="col my-3 text-center align-self-center">
+                <div class="row align-items-center justify-content-center mt-2 mb-4">
+                    <h3 class="col-11 col-lg-11 my-3 align-self-center user-select-none">Vos derniers commentaires</h3>
+                </div>
                 <?php
-                    if( isset( $userBdd ) === false ) {
+                    /*if( isset( $userBdd ) === false ) {
                         if( isset( $currentUser ) === false ) {
                             $currentUser = $_SESSION['user'];
                         }
                         if( isset( $mysqlGatewayObject ) === false ) {
-                            require_once 'inc/mysqlgateway_conf.php';
+                            require_once '../inc/mysqlgateway_conf.php';
                             $mysqlGatewayObject = new Gateway( $gatewayHost , $gatewayPassword , $gatewayUser , $gatewayDatabase );
                         }
                         $userBdd = new UserBdd( $mysqlGatewayObject , $currentUser );
+                    }*/
+                    $currentPagination = filter_input( INPUT_GET , 's' , FILTER_SANITIZE_NUMBER_INT );
+                    if( empty( $currentPagination ) === true ) {
+                        $currentPagination = 1;
+                    } else {
+                        $currentPagination = intval( $currentPagination );
                     }
-                    if( !empty( $scoringNum ) === true ) {
-                        $currentPagination = filter_input( INPUT_GET , 's' , FILTER_SANITIZE_NUMBER_INT );
-                        if( empty( $currentPagination ) === true ) {
-                            $currentPagination = 1;
-                        } else {
-                            $currentPagination = intval( $currentPagination );
-                        }
-                        $scoringObject = $userBdd->getScoringByIdentifier( $scoringNum );
-                        //var_dump($scoringObject);
-                        $scoringView = new ScoringView( $scoringObject );
-                        //var_dump($scoringView);
-                        //var_dump($scoringView->getScoring());
-                        echo '<div class="row align-items-center justify-content-center mt-2 mb-4">';
-                        $scoringView->getScoringTitleView();
-                        echo '</div>';
-                        $scoringView->getScoringView();
-                        echo '<hr>';
-                        $commentBdd = new ScoringBdd( $mysqlGatewayObject , $currentUser );
-                        $commentsArray = $commentBdd->getCommentsByPagination( $scoringNum );
-                        $commentsPaginationMax = $commentBdd->getPaginationMaxNumber( $scoringNum );
-                        if( $currentPagination > $commentsPaginationMax ) {
-                            $currentPagination = $commentsPaginationMax;
-                        }
-                        $scoringView->getCommentsListTitle( $commentsArray );
-                        $scoringView->getCommentsList( $commentsArray );
-                        $scoringView->getCommentsListPagination( $commentsPaginationMax , $currentPagination );
+                    //$scoringView = new ScoringView( $scoringObject );
+                    $scoringBdd = new ScoringBdd( $mysqlGatewayObject , $currentUser );
+                    $accountNum = $currentUser->getAccount()->getIdentifier();
+                    $commentsArray = $scoringBdd->getCommentsByPagination( $accountNum );
+                    $commentsPaginationMax = $scoringBdd->getPaginationMaxNumber( $accountNum );
+                    if( $currentPagination > $commentsPaginationMax ) {
+                        $currentPagination = $commentsPaginationMax;
                     }
+                    $scoringObject = new Scoring( $currentUser->getAccount() , 1 , 1 , 'type' , 'subject' , 'title' , 'description' , new \DateTime( '' , new \DateTimeZone("GMT") ) , null );
+                    //$commentObject = new Comment( 1 , 'text' , 1 , $currentUser->getAccount() , new \DateTime( '' , new \DateTimeZone("GMT") ) , null );
+                    $commentView = new ScoringView( $scoringObject );
+                    echo '<div class="row row-cols-1 justify-content-center">';
+                    $commentView->getCommentsList( $commentsArray , 'account' );
+                    echo '</div>';
+                    $commentView->getCommentsListPagination( $commentsPaginationMax , $currentPagination , 'account' );
                 ?>
             </div>
         </section>

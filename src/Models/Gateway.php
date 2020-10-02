@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Model;
 
 // plus gatewayresult => pour retourner un résultat selon ce qu'on veut
 
@@ -33,7 +33,7 @@ class Gateway
         {
             $this->pdoGateway = new \PDO( 'mysql:dbname='.$databaseValue.';host='.$hostValue, $userValue, $passwordValue );
         }
-        catch (PDOException $e)
+        catch (\PDOException $e)
         {
             throw new \Exception( 'The connection has failed : '.$e.getMessage().' For : mysql:dbname='.$databaseValue.';host='.$hostValue.';user='.$userValue , (int)$e.getCode() );
         }
@@ -68,7 +68,7 @@ class Gateway
         {
             $queryStatement = $this->pdoGateway->query( $query );
         }
-        catch(PDOException $e)
+        catch (\PDOException $e)
         {
             throw new \Exception( 'PDO error : '.$e.getMessage().' For the query : '.$query , (int)$e.getCode() );
         }
@@ -135,7 +135,7 @@ class Gateway
                 $affectedRows = $queryStatement->execute();
             }
         }
-        catch(PDOException $e)
+        catch (\PDOException $e)
         {
             throw new \Exception( 'Query error : '.$e.getMessage().' For the query : '.$query , (int)$e.getCode() );
         }

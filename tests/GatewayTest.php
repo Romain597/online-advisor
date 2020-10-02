@@ -39,7 +39,7 @@ class GatewayTest extends TestCase
         $reflection_property->setValue( $mockGateway, $mockPdo );
     }
 
-    // Tested method : __contruct
+    // Tested method : __construct()
 
     public function testConstructorWithBadTypeParameters()
     {

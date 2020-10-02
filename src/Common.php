@@ -39,21 +39,21 @@ abstract class Common
     /**
      * Check if the email is valid
      * 
-     * @param string $emailAdress Must be not empty
+     * @param string $emailAddress Must be not empty
      * 
      * @throws InvalidArgumentException If email is empty
      * 
      * @return bool
      */
-    public function checkEmail( string $emailAdress) : bool
+    public function checkEmail( string $emailAddress) : bool
     {
-        if( trim( $emailAdress ) == "" )
+        if( trim( $emailAddress ) == "" )
         {
-            throw new \InvalidArgumentException("The email adress is empty.");
+            throw new \InvalidArgumentException("The email address is empty.");
         }
         $validEmail = true;
-        //if( preg_match( '/^[[:alnum:]]([\-\_\.]?[[:alnum:]])+\_?\@[[:alnum:]]([\-\.]?[[:alnum:]])+\.[a-zA-Z]{2,6}$/i' , $emailAdress ) !== 1 )
-        if( filter_var( $emailAdress , FILTER_VALIDATE_EMAIL ) === false )
+        //if( preg_match( '/^[[:alnum:]]([\-\_\.]?[[:alnum:]])+\_?\@[[:alnum:]]([\-\.]?[[:alnum:]])+\.[a-zA-Z]{2,6}$/i' , $emailAddress ) !== 1 )
+        if( filter_var( $emailAddress , FILTER_VALIDATE_EMAIL ) === false )
         {
             $validEmail = false;
         }

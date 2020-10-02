@@ -13,22 +13,22 @@ class AccountTest extends TestCase
 
     private function initAccount()
     {
-        $date = new DateTime();
-        return new Account( 'type' , 'name' , 'token' , 1 , $date , $date );
+        $date = new \DateTime();
+        return new Account( 'type' , 'name' , 'token' , 1 , $date , $date , null );
     }
 
     private function initScoring()
     {
-        $date = new DateTime();
-        return new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , null );
+        $date = new \DateTime();
+        return new Scoring( 'name' , 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , null );
     }
 
-    // Tested method : getAccountIdentifier
+    // Tested method : getIdentifier
 
     public function testGetAccountIdentifier()
     {
         $account = $this->initAccount();
-        $this->assertIsInt( $account->getAccountIdentifier() );
+        $this->assertIsInt( $account->getIdentifier() );
     }
 
     // Tested method : __construct
@@ -36,14 +36,14 @@ class AccountTest extends TestCase
     public function testConstructorWithBadParameters()
     {
         $this->expectException(TypeError::class);
-        new Account( 'type' , 'name' , 'token' , '1' , '' , '' );
+        new Account( 'type' , 'name' , 'token' , '1' , '' , '' , null );
     }
 
     public function testConstructorWithNotAllowedParameter()
     {
         $this->expectException(InvalidArgumentException::class);
-        $date = new DateTime();
-        new Account( 'type', '' , 'token' , -1 , $date , $date );
+        $date = new \DateTime();
+        new Account( 'type', '' , 'token' , -1 , $date , $date , null );
     }
     
     public function testConstructorWithGoodParameters()

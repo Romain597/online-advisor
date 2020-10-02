@@ -20,7 +20,7 @@ class LoginCest //extends \Codeception\Module
 
     public function loginToAdminAccountUpdateLastVsit(FunctionalTester $I)
     {
-        $date = new DateTime( '' , new DateTimeZone("GMT") ); $date_string = $date->format("Y-m-d H:i:s");
+        $date = new \DateTime( '' , new \DateTimeZone("GMT") ); $date_string = $date->format("Y-m-d H:i:s");
         $I->updateInDatabase( 'accounts' , array( 'account_last_visit' => $date_string ) , array( 'account_login_identifier' => 'user@orange.fr' ) );
         $I->seeInDatabase( 'accounts', [ "account_last_visit" => $date_string ] );
         //$update_date = $I->grabFromDatabase( 'accounts' , 'account_last_visit' , array( 'account_login_identifier' => 'user@orange.fr' ) );

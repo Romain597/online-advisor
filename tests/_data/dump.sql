@@ -6,7 +6,7 @@ DELETE FROM `ratings_subjects_types`;
 DELETE FROM `ratings_comments`;
 
 -- Add a admin account
-REPLACE INTO `accounts` (`id_account`, `accounts_type_id`, `account_login_identifier`, `account_login_password`, `account_pseudo`, `account_token`, `account_add_date`, `account_last_visit`) VALUES
+REPLACE INTO `accounts` (`id_account`, `account_type_id`, `account_login_identifier`, `account_login_password`, `account_pseudo`, `account_token`, `account_add_date`, `account_last_visit`) VALUES
 (1, 1, 'user@orange.fr', '$2y$10$ts/8PLVhwuBFBo1VaCmbRuWoKjOe0SxZy6jfA5NsjF9HmR/pcaPbe', 'Romain', '5f4e51bd58a32605186540', '2020-09-01 00:00:00', '2020-09-01 00:00:00');
 
 -- Add a basic type of account

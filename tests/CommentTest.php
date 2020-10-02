@@ -12,14 +12,14 @@ class CommentTest extends TestCase
 
    private function initComment()
    {
-       $date = new DateTime();
+       $date = new \DateTime();
        return new Comment( 1 , 'comment text' , 'pseudo author of comment' , $date , NULL );
    }
 
    private function initScoring()
    {
-       $date = new DateTime();
-       return new Scoring( 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , null );
+       $date = new \DateTime();
+       return new Scoring( 'name' , 1 , 5 , 'Oeuvre' , 'pseudo author of scoring' ,'Livre enfant' , 'Super livre enfant' , 'description livre' , $date , null );
    }
 
    // Tested method : __construct
@@ -32,7 +32,7 @@ class CommentTest extends TestCase
 
    public function testCommentConstructorWithGoodParamatersWithoutNull()
    {
-       $date = new DateTime();
+       $date = new \DateTime();
        $this->assertInstanceOf( Comment::class , new Comment( 1 , 'comment text' , 'pseudo author of comment' , $date , $date ) );
    }
 
@@ -83,7 +83,7 @@ class CommentTest extends TestCase
 
    public function testGetCommentUpDateObject()
    {
-       $date = new DateTime();
+       $date = new \DateTime();
        $comment = new Comment( 1 , 'comment text' , 'pseudo author of comment' , $date , $date );
        $commentUpdate = $comment->getUpDate();
        $this->assertNotNull( $commentUpdate );

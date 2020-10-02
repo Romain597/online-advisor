@@ -2,23 +2,32 @@
 
 declare(strict_types=1);
 
-session_start();
-
 require 'vendor/autoload.php';
 
-use App\Gateway;
-use App\User;
-use App\UserBdd;
+session_start();
 
-if( !isset( $_GLOBALS['user'] ) || empty( $_GLOBALS['user'] ) ) {
-    $_GLOBALS['user'] = new User();
+use App\Model\Gateway;
+use App\Entity\User;
+use App\Model\UserBdd;
+use App\Controller\UserController;
+use App\View\UserView;
+
+//unset($_SESSION['user']);
+
+$_SESSION['message'] = '';
+
+if( !isset( $_SESSION['user'] ) === true || empty( $_SESSION['user'] ) === true ) {
+    $controller = new UserController();
+    $_SESSION['user'] = new User($controller);
 }
 
-$currentUser = $_GLOBALS['user'];
+//var_dump($_SESSION['user'] , serialize($_SESSION['user']) );
+
+$currentUser = $_SESSION['user'];
 if( $currentUser->hasAccount() === true ) {
     if( isset( $_SESSION['token'] ) === true && !empty( $_SESSION['token'] ) === true ) {
         require_once 'inc/mysqlgateway_conf.php';
-        $mysqlGatewayObject = new Gateway( $host , $password , $user , $database );
+        $mysqlGatewayObject = new Gateway( $gatewayHost , $gatewayPassword , $gatewayUser , $gatewayDatabase );
         $userBdd = new UserBdd( $mysqlGatewayObject , $currentUser );
         if( $userBdd->checkAccountToken( $_SESSION['token'] ) === false ) {
             $currentUser->logout();
@@ -32,9 +41,10 @@ if( $currentUser->hasAccount() === true ) {
     unset( $_SESSION['token'] );
 }
 
-//var_dump($_GLOBALS['user']);
+//var_dump($_SESSION['user'] );
 
-//mettre objet a place du code brute
+/*$array = array(0 => 100, "color" => "red");
+var_dump(array_keys($array));*/
 
 ?>
 <!DOCTYPE html>
@@ -60,14 +70,16 @@ if( $currentUser->hasAccount() === true ) {
             </a>
             <ul class="nav justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link" href="login.php">Connexion</a>
+                    <a class="nav-link" href="index.php">Accueil</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="create_account.php">S'inscrire</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Déconnexion</a>
-                </li>
+                <?php
+                    if( isset( $currentUser ) === false ) {
+                        $currentUser = $_SESSION['user'];
+                    }
+                    $userView = new UserView( $currentUser );
+                    //var_dump($userView);
+                    $userView->getUserMenu();
+                ?>
             </ul>
         </nav>
     </header>
@@ -76,63 +88,41 @@ if( $currentUser->hasAccount() === true ) {
         <section class="row align-items-center justify-content-center">
             <div class="col my-3 text-center align-self-center">
                 <div class="row align-items-center justify-content-center mt-2 mb-4">
-                    <h3 class="col-11 col-lg-11 my-3 align-self-center user-select-none">Dernière notations</h3>
+                    <h3 class="col-11 col-lg-11 my-3 align-self-center user-select-none">Dernières notations</h3>
                 </div>
                 <?php
                     if( isset( $userBdd ) === false ) {
                         if( isset( $currentUser ) === false ) {
-                            $currentUser = $_GLOBALS['user'];
+                            $currentUser = $_SESSION['user'];
                         }
                         if( isset( $mysqlGatewayObject ) === false ) {
                             require_once 'inc/mysqlgateway_conf.php';
-                            $mysqlGatewayObject = new Gateway( $host , $password , $user , $database );
+                            $mysqlGatewayObject = new Gateway( $gatewayHost , $gatewayPassword , $gatewayUser , $gatewayDatabase );
                         }
                         $userBdd = new UserBdd( $mysqlGatewayObject , $currentUser );
                     }
-                    //var_dump($currentUser,$userBdd,$mysqlGatewayObject);
-                    //var_dump(new \PDO( 'mysql:dbname=online_advisor_custom;host=localhost', 'root', '' ));
-                    //var_dump($userBdd->getPaginationPageNumber());
-                    $scoringsPaginationMax = $userBdd->getPaginationPageNumber();
-                    $scoringsArray = $userBdd->getAllScoringsDatasByPagination();
-                    //
-                    if( !empty($scoringsArray) ) {
-                        echo '<div class="row row-cols-1 justify-content-center">';
-                        //var_dump($scoringsArray);
-                        foreach($scoringsArray as $scoringData) {
-                            $addDate = null; $updateDate = null;
-                            $scoringDate = '';
-                            //var_dump($scoringData);
-                            //var_dump($scoringData['rating_subject_update_date']);
-                            if( $scoringData['rating_subject_update_date'] != null && trim( $scoringData['rating_subject_update_date'] ) != "" ) {
-                                $updateDate = new DateTime( $scoringData['rating_subject_update_date'] , new DateTimeZone("GMT") );
-                                $updateDate->setTimezone( new DateTimeZone("Europe/Paris") );
-                                $scoringDate = $updateDate->format("d/m/Y H:i:s");
-                            } else {
-                                $addDate = new DateTime( $scoringData['rating_subject_add_date'] , new DateTimeZone("GMT") );
-                                $addDate->setTimezone( new DateTimeZone("Europe/Paris") );
-                                $scoringDate = $addDate->format("d/m/Y H:i:s");
-                            }
-                            echo '<div class="col-8 col-lg-4 mb-4 mh-20">';
-                            echo '    <div class="card h-100">';
-                            echo '        <div class="card-header user-select-none">'.$scoringData['rating_subject_type_name'].'</div>';
-                            echo '        <div class="card-body user-select-none bg-transparent">';
-                            echo '            <h5 class="card-title">'.$scoringData['rating_subject_name'].'</h5>';
-                            echo '            <p class="card-text"><small class="text-muted">'.$scoringDate.'</small></p>'; //"Last updated 3 mins ago"
-                            echo '            <p class="card-text">'.$scoringData['rating_subject_title'].'</p>';
-                            echo '        </div>';
-                            echo '        <div class="card-footer"><a href="single.php?s='.$scoringData['id_rating_subject'].'" class="card-link stretched-link">'."Voir plus".'</a></div>';
-                            echo '    </div>';
-                            echo '</div>';
-                        }
-                        echo '</div>';
-                        echo '<div class="mt-3 row align-items-center justify-content-center">';
-                        echo '    <button type="button" class="mx-2 btn btn-outline-primary">Charger plus de notations</button>';
-                        echo '</div>';
+                    $currentPagination = filter_input( INPUT_GET , 's' , FILTER_SANITIZE_NUMBER_INT );
+                    if( empty( $currentPagination ) === true ) {
+                        $currentPagination = 1;
                     } else {
-                        echo '<div class="row row-cols-1 justify-content-center">';
-                        echo '<p class="text-center">Aucune notation(s)...</p>';
-                        echo '</div>';
+                        $currentPagination = intval( $currentPagination );
                     }
+                    $scoringsPaginationMax = $userBdd->getPaginationMaxNumber();
+                    if( $currentPagination > $scoringsPaginationMax ) {
+                        $currentPagination = $scoringsPaginationMax;
+                    }
+                    $scoringsArray = $userBdd->getScoringsByPagination();
+                    //
+                    //var_dump($userBdd);
+                    //var_dump($currentUser , $scoringsArray);
+                    //var_dump($scoringsArray, $currentUser->getGlobalScorings());
+                    if( isset( $userView ) === false ) {
+                        $userView = new UserView( $currentUser );
+                    }
+                    echo '<div class="row row-cols-1 justify-content-center">';
+                    $userView->getScoringsList( $scoringsArray );
+                    echo '</div>';
+                    $userView->getScoringsListPagination( $scoringsPaginationMax , $currentPagination );
                 ?>
             </div>
         </section>

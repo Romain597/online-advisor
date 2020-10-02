@@ -13,8 +13,8 @@ class UserTest extends TestCase
 
     private function initAccount()
     {
-        $date = new DateTime();
-        return new Account( 'name' , 'token' , 1 , $date , $date );
+        $date = new \DateTime();
+        return new Account( 'type' , 'name' , 'token' , 1 , $date , $date , null );
     }
 
     private function initUser()

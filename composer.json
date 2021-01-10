@@ -3,8 +3,7 @@
     "description": "Online Advisor Custom",
     "authors": [
         {
-            "name": "Romain Balestreri",
-            "email": "romain.balestreri@orange.fr"
+            "name": "Romain Balestreri"
         }
     ],
     "require": {},
